@@ -1,22 +1,31 @@
-from telegram import Update
-from telegram.ext import Application, CommandHandler, ContextTypes
-import os
+from telegram.ext import (
+        Application,
+            CommandHandler,
+                MessageHandler,
+                    filters,
+                    )
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text(
-        "Hello Aebysh 👋\n\n"
-        "I'm AebyshAlphaBot Version 1.0\n\n"
-        "Your Personal AI Trading Partner 📈"
-    )
+                    from utils.config import BOT_TOKEN
+                    from bot.handlers import start, help_command, chat
 
 
-app = Application.builder().token(BOT_TOKEN).build()
+                    def main():
+                        app = Application.builder().token(BOT_TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
+                            # Commands
+                                app.add_handler(CommandHandler("start", start))
+                                    app.add_handler(CommandHandler("help", help_command))
 
-print("Bot is running...")
+                                        # Normal chat messages
+                                            app.add_handler(
+                                                    MessageHandler(filters.TEXT & ~filters.COMMAND, chat)
+                                                        )
 
-app.run_polling()
+                                                            print("🚀 AebyshAlphaBot v1.0 is running...")
+
+                                                                app.run_polling()
+
+
+                                                                if __name__ == "__main__":
+                                                                    main()
+)
